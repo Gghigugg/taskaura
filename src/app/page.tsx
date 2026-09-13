@@ -9,7 +9,7 @@ export default function Home() {
     <main className="page">
       <div className="container">
         <nav className="nav">
-          <a className="brand" href="/">Task<span>ora</span></a>
+          <a className="brand" href="/">Task<span>Aura</span></a>
           <div className="navLinks">
             <a href="#how">How it works</a>
             <a href="#features">Features</a>
@@ -21,7 +21,7 @@ export default function Home() {
           <div className="badge">Complete. Earn. Reward.</div>
           <h1>Turn tasks into rewards.</h1>
           <p>
-            Taskora is being built as a fast, transparent task and rewards platform
+            TaskAura is being built as a fast, transparent task and rewards platform
             with secure verification, wallet-ledger architecture and a dedicated admin system.
           </p>
           <div className="actions">
@@ -39,7 +39,7 @@ export default function Home() {
           ))}
         </section>
 
-        <footer className="footer">© {new Date().getFullYear()} Taskora. All rights reserved.</footer>
+        <footer className="footer">© {new Date().getFullYear()} TaskAura. All rights reserved.</footer>
       </div>
     </main>
   );
