@@ -1,0 +1,9 @@
+'use client'
+
+import { useState } from 'react'
+
+export default function SubmitForm({ task }: { task: { id: string; name: string; reward: number; proof_required: boolean; proof_requirements: string | null; task_link: string | null } }) {
+  const [file,setFile]=useState<File|null>(null),[note,setNote]=useState(''),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[error,setError]=useState('')
+  async function submit(e:React.FormEvent){e.preventDefault();setBusy(true);setError('');setMessage('');const body=new FormData();body.append('taskId',task.id);body.append('note',note);if(file)body.append('proof',file);try{const r=await fetch('/api/tasks/submit',{method:'POST',body});const d=await r.json();if(!r.ok)throw new Error(d.error||'Submission failed.');setMessage('Proof submitted successfully. Your submission is now pending review.');setFile(null);setNote('');const i=document.getElementById('proof') as HTMLInputElement|null;if(i)i.value=''}catch(e){setError(e instanceof Error?e.message:'Submission failed.')}finally{setBusy(false)}}
+  return <form onSubmit={submit} className="form"><label>Proof screenshot / file<input id="proof" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" required={task.proof_required} onChange={e=>setFile(e.target.files?.[0]||null)}/></label>{task.proof_requirements&&<div className="requirements"><strong>Proof requirements</strong><p>{task.proof_requirements}</p></div>}<label>Additional proof or note<textarea value={note} onChange={e=>setNote(e.target.value)} placeholder="Add any useful details (optional)"/></label>{error&&<div className="error">{error}</div>}{message&&<div className="success">✓ {message}</div>}<button type="submit" disabled={busy}>{busy?'Uploading…':'Submit Proof'}</button><small>Maximum file size: 8 MB. Never upload passwords, OTPs, or sensitive financial credentials.</small></form>
+}
