@@ -31,9 +31,9 @@ export default function LoginPage() {
     <main className="auth-shell">
       <section className="auth-card">
         <div className="brand-mark">T</div>
-        <p className="eyebrow">TASKORA</p>
+        <p className="eyebrow">TASKAURA</p>
         <h1>Welcome back</h1>
-        <p className="muted">Login with your Taskora username.</p>
+        <p className="muted">Login with your TaskAura username.</p>
 
         <form onSubmit={handleSubmit} className="auth-form">
           <label>Username<input value={username} onChange={e => setUsername(e.target.value)} required autoComplete="username" /></label>
@@ -42,7 +42,7 @@ export default function LoginPage() {
           <button disabled={loading}>{loading ? 'Signing in…' : 'Login'}</button>
         </form>
 
-        <p className="muted small">No account? Contact Taskora Admin for activation.</p>
+        <p className="muted small">No account? Contact TaskAura Admin for activation.</p>
         <a className="text-link" href="/contact">Contact Admin →</a>
       </section>
     </main>
