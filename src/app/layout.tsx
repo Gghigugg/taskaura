@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Taskora — Complete. Earn. Reward.",
+  title: "TaskAura — Complete. Earn. Reward.",
   description: "A modern task and rewards platform.",
 };
 
