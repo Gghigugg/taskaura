@@ -31,12 +31,16 @@ function parse(body:any) {
   return {name,category,description:description||null,task_link:taskLink||null,reward,estimated_minutes:estimatedMinutes,proof_required:proofRequired,proof_requirements:proofRequired?proofRequirements:null,deadline:deadlineIso,status}
 }
 
+async function audit(supabase:any, adminId:string, action:string, targetId:string, oldValue:any, newValue:any){
+  await supabase.from('admin_audit_logs').insert({admin_id:adminId,action,module:'tasks',target_id:targetId,old_value:oldValue||null,new_value:newValue||null})
+}
+
 export async function POST(request:Request){
   const {supabase,user,admin}=await getAdmin(); if(!user)return NextResponse.json({error:'Unauthorized'},{status:401}); if(!admin||!ROLES.has(admin.role))return NextResponse.json({error:'Not authorized.'},{status:403})
-  try{const values=parse(await request.json()); const {data:task,error}=await supabase.from('tasks').insert({...values,created_by:user.id}).select('id').single(); if(error)throw error; return NextResponse.json({ok:true,task})}catch(e:any){return NextResponse.json({error:e.message||'Could not create task.'},{status:400})}
+  try{const values=parse(await request.json()); const {data:task,error}=await supabase.from('tasks').insert({...values,created_by:user.id}).select('*').single(); if(error)throw error; await audit(supabase,user.id,'task.create',task.id,null,task); return NextResponse.json({ok:true,task})}catch(e:any){return NextResponse.json({error:e.message||'Could not create task.'},{status:400})}
 }
 
 export async function PATCH(request:Request){
   const {supabase,user,admin}=await getAdmin(); if(!user)return NextResponse.json({error:'Unauthorized'},{status:401}); if(!admin||!ROLES.has(admin.role))return NextResponse.json({error:'Not authorized.'},{status:403})
-  try{const body=await request.json(); const id=String(body.id||''); if(!id)return NextResponse.json({error:'Task id is required.'},{status:400}); const values=parse(body); const {data:task,error}=await supabase.from('tasks').update(values).eq('id',id).select('id').single(); if(error)throw error; return NextResponse.json({ok:true,task})}catch(e:any){return NextResponse.json({error:e.message||'Could not update task.'},{status:400})}
+  try{const body=await request.json(); const id=String(body.id||''); if(!id)return NextResponse.json({error:'Task id is required.'},{status:400}); const values=parse(body); const {data:old}=await supabase.from('tasks').select('*').eq('id',id).maybeSingle(); if(!old)return NextResponse.json({error:'Task not found.'},{status:404}); const {data:task,error}=await supabase.from('tasks').update(values).eq('id',id).select('*').single(); if(error)throw error; await audit(supabase,user.id,'task.update',id,old,task); return NextResponse.json({ok:true,task})}catch(e:any){return NextResponse.json({error:e.message||'Could not update task.'},{status:400})}
 }
