@@ -1,0 +1,4 @@
+import Link from 'next/link'
+import {requireAdmin} from '@/lib/admin'
+import CreateUserForm from '../create-user-form'
+export default async function NewUser(){const {admin}=await requireAdmin();if(!['Super Admin','Support Manager'].includes(admin.role))return <main className="page"><Link href="/admin/users">← Users</Link><h1>Not authorized</h1><p>You do not have permission to create accounts.</p></main>;return <main className="page"><Link href="/admin/users">← Users</Link><p className="eyebrow">TASKAURA ADMIN · USERS</p><h1>Create User</h1><p className="muted">Admin-assisted registration · temporary password shown once.</p><CreateUserForm/><style>{`.page{min-height:100vh;background:#07070a;color:#fff;padding:24px 16px;max-width:700px;margin:auto}.page>a{color:#aaa;text-decoration:none}.eyebrow{margin-top:28px;font-size:10px;letter-spacing:.2em;color:#888}.muted{color:#999;font-size:12px}`}</style></main>}
