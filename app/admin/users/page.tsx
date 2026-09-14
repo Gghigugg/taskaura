@@ -1,0 +1,9 @@
+import { requireAdmin } from '@/lib/admin'
+import { createClient } from '@/lib/supabase/server'
+
+export default async function AdminUsersPage() {
+  const { admin } = await requireAdmin()
+  const supabase = await createClient()
+  const { data, error } = await supabase.from('users').select('id,username,registration_source,activation_status,must_change_password,created_at').order('created_at',{ascending:false}).limit(100)
+  return <main className="page"><a href="/admin">← Admin</a><p className="eyebrow">TASKAURA ADMIN · USERS</p><h1>Users</h1><p className="muted">Signed in as {admin.username} · {admin.role}</p>{error?<div className="panel">Unable to load users.</div>:<div className="list">{data?.map((u:any)=><article className="card" key={u.id}><div><strong>@{u.username}</strong><span>{u.activation_status} · {u.registration_source}</span></div><div><small>{u.must_change_password?'Password reset required':'Active password'} · {new Date(u.created_at).toLocaleDateString('en-IN')}</small></div></article>)}</div>}<style>{`.page{min-height:100vh;background:#07070a;color:#fff;padding:24px 16px 50px;max-width:1000px;margin:auto}.page>a{color:#aaa;text-decoration:none;font-size:13px}.eyebrow{font-size:10px;letter-spacing:.2em;color:#888;margin-top:28px}.page h1{margin:4px 0;font-size:30px}.muted,small{color:#999;font-size:12px}.list{display:grid;gap:10px;margin-top:24px}.card,.panel{background:#111117;border:1px solid #292933;border-radius:16px;padding:16px;display:flex;justify-content:space-between;gap:16px}.card strong{display:block}.card span{display:block;color:#aaa;font-size:12px;margin-top:5px;text-transform:capitalize}.panel{margin-top:24px}`}</style></main>
+}
