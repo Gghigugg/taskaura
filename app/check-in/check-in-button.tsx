@@ -1,0 +1,4 @@
+'use client'
+import {useState} from 'react'
+import {createClient} from '@/lib/supabase/client'
+export default function CheckInButton(){const [msg,setMsg]=useState('');const [busy,setBusy]=useState(false);async function claim(){setBusy(true);setMsg('');const {data,error}=await createClient().rpc('claim_daily_checkin');setBusy(false);if(error)setMsg(error.message);else if(data?.already_claimed)setMsg('Today’s check-in is already claimed.');else setMsg(`Checked in! Reward ₹${Number(data?.reward_amount||0).toFixed(2)} · Streak ${data?.streak_number||1}`)}return <div className="feature-card" style={{marginTop:16}}><button className="action-button" onClick={claim} disabled={busy}>{busy?'Claiming…':'Claim today’s reward'}</button>{msg&&<p className="muted">{msg}</p>}</div>}
