@@ -1,0 +1,3 @@
+import Link from 'next/link'
+
+export default function ForgotPasswordPage(){return <main className="dashboard-shell"><section className="feature-card"><p className="eyebrow">TASKAURA</p><h1>Account Recovery</h1><p>TaskAura does not use email or OTP recovery. For a lost password, contact an authorized admin/support team so ownership can be checked safely.</p><div style={{display:'flex',gap:10,flexWrap:'wrap',marginTop:20}}><Link className="action-link" href="/contact">Contact Support</Link><Link className="action-link" href="/login">Back to Login</Link></div></section></main>}
