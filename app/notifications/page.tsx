@@ -1,8 +1,3 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-
-export default async function NotificationsPage() {
-  const supabase = await createClient(); const { data: { user } } = await supabase.auth.getUser(); if (!user) redirect('/login')
-  const { data } = await supabase.from('notifications').select('id,type,title,message,read_at,created_at').eq('user_id', user.id).order('created_at',{ascending:false}).limit(50)
-  return <main className="dashboard-shell"><section className="feature-card"><h1>Notifications</h1>{data?.length ? data.map(n=><article className="feature-card" key={n.id}><strong>{n.title}</strong><p>{n.message}</p><small>{n.read_at ? 'Read' : 'Unread'}</small></article>) : <p className="muted">No notifications.</p>}</section></main>
-}
+export default async function NotificationsPage(){const supabase=await createClient();const {data:{user}}=await supabase.auth.getUser();if(!user)redirect('/login');const {data:account}=await supabase.from('users').select('id').eq('auth_user_id',user.id).maybeSingle();const {data}=account?await supabase.from('notifications').select('id,type,title,message,read_at,created_at').eq('user_id',account.id).order('created_at',{ascending:false}).limit(50):{data:[]};return <main className="dashboard-shell"><section className="feature-card"><p className="eyebrow">TASKAURA</p><h1>Notifications</h1>{data?.length?data.map(n=><article className="feature-card" key={n.id} style={{marginTop:10}}><strong>{n.title}</strong><p>{n.message}</p><small>{n.read_at?'Read':'Unread'} · {new Date(n.created_at).toLocaleString('en-IN')}</small></article>):<p className="muted">No notifications.</p>}</section></main>}
