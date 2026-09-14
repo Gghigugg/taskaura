@@ -1,9 +1,4 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-
-export default async function SettingsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-  return <main className="dashboard-shell"><section className="feature-card"><p className="eyebrow">TASKAURA</p><h1>Settings</h1><p>Account and application settings will be managed here.</p></section></main>
-}
+import Link from 'next/link'
+export default async function SettingsPage(){const supabase=await createClient();const {data:{user}}=await supabase.auth.getUser();if(!user)redirect('/login');return <main className="dashboard-shell"><section className="feature-card"><p className="eyebrow">TASKAURA</p><h1>Settings</h1><p>Manage your account security and support options.</p><div style={{display:'grid',gap:10,marginTop:18}}><Link className="action-link" href="/profile">Profile</Link><Link className="action-link" href="/security">Security & Password</Link><Link className="action-link" href="/notifications">Notifications</Link><Link className="action-link" href="/support">Support</Link></div></section></main>}
